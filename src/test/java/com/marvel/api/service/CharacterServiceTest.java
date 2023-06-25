@@ -16,6 +16,10 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+/**
+ * La clase CharacterServiceTest Se probó antes de hacer QueryLog una Entidad de JPA por lo tanto
+ * ah quedado deprecada. No dediqué tiempo a corregir ya que quise terminar los endpoints de la BD
+ */
 public class CharacterServiceTest {
 
     private CharacterService characterService;
@@ -37,14 +41,14 @@ public class CharacterServiceTest {
         List<QueryLog> queryLogs = characterService.GetAllQueryLog();
 
         assertThat( queryLogs, is(Arrays.asList(
-                new QueryLog("Hulk", 1009351)
+                new QueryLog(2L,"Hulk", 1009351)
         )));
     }
 
     @Test
     public void insert_a_query_log() {
 
-        QueryLog queryLog = new QueryLog("Groot", 1010743);
+        QueryLog queryLog = new QueryLog(3L,"Groot", 1010743);
 
         characterService.addQueryCharacter(queryLog);
 

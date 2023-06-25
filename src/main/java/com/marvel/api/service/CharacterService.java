@@ -3,25 +3,26 @@ package com.marvel.api.service;
 import com.google.gson.Gson;
 import com.marvel.api.model.entity.CharacterDataWrapper;
 import com.marvel.api.model.entity.QueryLog;
+import com.marvel.api.repository.QueryLogRepository;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class CharacterService {
+
+    private final QueryLogRepository queryLogRepository;
 
     @Value("${urlApi.url}")
     private String URL;
@@ -35,9 +36,10 @@ public class CharacterService {
     @Value("${urlApi.hash}")
     private String HASH;
 
-    DriverManagerDataSource dataSource = new DriverManagerDataSource("jdbc:h2:mem:test;MODE=MYSQL","sa","sa");
 
-    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    //DriverManagerDataSource dataSource = new DriverManagerDataSource("jdbc:h2:mem:test;MODE=MYSQL","sa","sa");
+
+    //JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
 
     public CharacterDataWrapper findAll() throws IOException {
@@ -57,21 +59,23 @@ public class CharacterService {
 
     public void addQueryCharacter(QueryLog queryLog) {
 
-        jdbcTemplate.update("insert into QUERY_LOG (characterName, characterId) values (?, ?)",
-                queryLog.getCharacterName(), queryLog.getCharacterId()
-                );
-
+        this.queryLogRepository.save(queryLog);
+        //jdbcTemplate.update("insert into QUERY_LOG (characterName, characterId) values (?, ?)",
+          //      queryLog.getCharacterName(), queryLog.getCharacterId()
+            //    );
     }
 
     public List<QueryLog> GetAllQueryLog() {
 
-        return jdbcTemplate.query("select * from QUERY_LOG", movieMapper);
+        //return jdbcTemplate.query("select * from QUERY_LOG", movieMapper);
+        return queryLogRepository.findAll();
 
     }
-    public QueryLog getQueryLogById(int characterId) {
+    public QueryLog getQueryLogById(Long characterId) {
 
-        Object[] args = { characterId };
-        return jdbcTemplate.queryForObject("select * from QUERY_LOG where characterId = ?", args, movieMapper);
+        //Object[] args = { characterId };
+        //return jdbcTemplate.queryForObject("select * from QUERY_LOG where characterId = ?", args, movieMapper);
+        return queryLogRepository.findById(characterId).orElseThrow();
     }
 
     private CharacterDataWrapper httpGet(String url) throws IOException {
@@ -90,6 +94,7 @@ public class CharacterService {
 
     private static RowMapper<QueryLog> movieMapper = (rs, rowNum) ->
             new QueryLog(
+                rs.getLong("id"),
                 rs.getString("characterName"),
                 rs.getInt("characterId")
             );
