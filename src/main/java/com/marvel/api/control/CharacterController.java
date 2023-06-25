@@ -28,7 +28,7 @@ public class CharacterController {
     }
 
     @PostMapping()
-    public void addQueryCharacter(@RequestBody QueryLog queryLog) {
+    public void addQueryLog(@RequestBody QueryLog queryLog) {
         characterService.addQueryCharacter(queryLog);
     }
 

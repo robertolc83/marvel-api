@@ -37,11 +37,6 @@ public class CharacterService {
     private String HASH;
 
 
-    //DriverManagerDataSource dataSource = new DriverManagerDataSource("jdbc:h2:mem:test;MODE=MYSQL","sa","sa");
-
-    //JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-
-
     public CharacterDataWrapper findAll() throws IOException {
 
         String url = URL + "?apikey=" + API_KEY + "&ts=" + TS + "&hash=" + HASH;
@@ -60,21 +55,16 @@ public class CharacterService {
     public void addQueryCharacter(QueryLog queryLog) {
 
         this.queryLogRepository.save(queryLog);
-        //jdbcTemplate.update("insert into QUERY_LOG (characterName, characterId) values (?, ?)",
-          //      queryLog.getCharacterName(), queryLog.getCharacterId()
-            //    );
+
     }
 
     public List<QueryLog> GetAllQueryLog() {
 
-        //return jdbcTemplate.query("select * from QUERY_LOG", movieMapper);
         return queryLogRepository.findAll();
 
     }
     public QueryLog getQueryLogById(Long characterId) {
 
-        //Object[] args = { characterId };
-        //return jdbcTemplate.queryForObject("select * from QUERY_LOG where characterId = ?", args, movieMapper);
         return queryLogRepository.findById(characterId).orElseThrow();
     }
 
