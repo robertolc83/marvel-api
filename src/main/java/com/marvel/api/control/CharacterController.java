@@ -1,15 +1,15 @@
 package com.marvel.api.control;
 
 import com.marvel.api.model.entity.CharacterDataWrapper;
+import com.marvel.api.model.entity.QueryLog;
 import com.marvel.api.service.CharacterService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/character")
@@ -23,8 +23,18 @@ public class CharacterController {
     }
 
     @GetMapping("/{characterId}")
-    public CharacterDataWrapper getAll(@PathVariable("characterId") int characterId) throws IOException {
+    public CharacterDataWrapper getById(@PathVariable("characterId") int characterId) throws IOException {
         return characterService.findById(characterId);
+    }
+
+    @PostMapping()
+    public void addQueryCharacter(@RequestBody QueryLog queryLog) {
+        characterService.addQueryCharacter(queryLog);
+    }
+
+    @GetMapping("/queryLog")
+    public List<QueryLog> GetAllQueryLog() {
+        return characterService.GetAllQueryLog();
     }
 
 }
